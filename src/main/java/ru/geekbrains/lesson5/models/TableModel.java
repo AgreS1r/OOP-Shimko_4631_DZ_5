@@ -50,8 +50,18 @@ public class TableModel implements Model {
      * @param Name
      * @return
      */
-    public int changeReservationTable(int oldReservationNo, Date reservationDate, int tableNo, String Name){
-        return -1;
+    public int changeReservationTable(int oldReservationNo, Date reservationDate, int tableNo, String name) {
+        for (Table table : loadTables()) {
+            for (Reservation reservation : table.getReservations()) {
+                if (reservation.getId() == oldReservationNo) {
+                    table.getReservations().remove(reservation);
+                    Reservation newReservation = new Reservation(reservationDate, name);
+                    table.getReservations().add(newReservation);
+                    return newReservation.getId();
+                }
+            }
+        }
+        throw new RuntimeException("Бронь с номером " + oldReservationNo + " не найдена.");
     }
 
 
